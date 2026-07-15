@@ -1,0 +1,343 @@
+{
+  "summary": {
+    "o200k_base": {
+      "json": {
+        "total_tokens": 19272,
+        "overall_vs_json_pct": 0.0,
+        "mean_vs_json_pct": 0.0,
+        "min_vs_json_pct": 0.0,
+        "max_vs_json_pct": 0.0
+      },
+      "json_pretty": {
+        "total_tokens": 30549,
+        "overall_vs_json_pct": -58.5,
+        "mean_vs_json_pct": -56.8,
+        "min_vs_json_pct": -70.3,
+        "max_vs_json_pct": -20.2
+      },
+      "yaml": {
+        "total_tokens": 23686,
+        "overall_vs_json_pct": -22.9,
+        "mean_vs_json_pct": -29.4,
+        "min_vs_json_pct": -85.0,
+        "max_vs_json_pct": -5.3
+      },
+      "haal": {
+        "total_tokens": 14860,
+        "overall_vs_json_pct": 22.9,
+        "mean_vs_json_pct": 11.7,
+        "min_vs_json_pct": -13.6,
+        "max_vs_json_pct": 37.4
+      }
+    },
+    "cl100k_base": {
+      "json": {
+        "total_tokens": 19138,
+        "overall_vs_json_pct": 0.0,
+        "mean_vs_json_pct": 0.0,
+        "min_vs_json_pct": 0.0,
+        "max_vs_json_pct": 0.0
+      },
+      "json_pretty": {
+        "total_tokens": 30520,
+        "overall_vs_json_pct": -59.5,
+        "mean_vs_json_pct": -57.6,
+        "min_vs_json_pct": -74.0,
+        "max_vs_json_pct": -20.6
+      },
+      "yaml": {
+        "total_tokens": 23641,
+        "overall_vs_json_pct": -23.5,
+        "mean_vs_json_pct": -29.8,
+        "min_vs_json_pct": -85.0,
+        "max_vs_json_pct": -5.5
+      },
+      "haal": {
+        "total_tokens": 14725,
+        "overall_vs_json_pct": 23.1,
+        "mean_vs_json_pct": 11.8,
+        "min_vs_json_pct": -13.2,
+        "max_vs_json_pct": 38.3
+      }
+    }
+  },
+  "datasets": {
+    "employees_100": {
+      "bytes": {
+        "json": 16093,
+        "json_pretty": 23501,
+        "yaml": 15889,
+        "haal": 8345
+      },
+      "o200k_base": {
+        "json": {
+          "tokens": 4732,
+          "vs_json_pct": 0.0
+        },
+        "json_pretty": {
+          "tokens": 7436,
+          "vs_json_pct": -57.1
+        },
+        "yaml": {
+          "tokens": 5717,
+          "vs_json_pct": -20.8
+        },
+        "haal": {
+          "tokens": 3107,
+          "vs_json_pct": 34.3
+        }
+      },
+      "cl100k_base": {
+        "json": {
+          "tokens": 4731,
+          "vs_json_pct": 0.0
+        },
+        "json_pretty": {
+          "tokens": 7436,
+          "vs_json_pct": -57.2
+        },
+        "yaml": {
+          "tokens": 5715,
+          "vs_json_pct": -20.8
+        },
+        "haal": {
+          "tokens": 3068,
+          "vs_json_pct": 35.2
+        }
+      }
+    },
+    "orders_50": {
+      "bytes": {
+        "json": 14337,
+        "json_pretty": 26399,
+        "yaml": 14897,
+        "haal": 11264
+      },
+      "o200k_base": {
+        "json": {
+          "tokens": 4561,
+          "vs_json_pct": 0.0
+        },
+        "json_pretty": {
+          "tokens": 7769,
+          "vs_json_pct": -70.3
+        },
+        "yaml": {
+          "tokens": 5528,
+          "vs_json_pct": -21.2
+        },
+        "haal": {
+          "tokens": 4435,
+          "vs_json_pct": 2.8
+        }
+      },
+      "cl100k_base": {
+        "json": {
+          "tokens": 4473,
+          "vs_json_pct": 0.0
+        },
+        "json_pretty": {
+          "tokens": 7782,
+          "vs_json_pct": -74.0
+        },
+        "yaml": {
+          "tokens": 5520,
+          "vs_json_pct": -23.4
+        },
+        "haal": {
+          "tokens": 4437,
+          "vs_json_pct": 0.8
+        }
+      }
+    },
+    "events_200": {
+      "bytes": {
+        "json": 21535,
+        "json_pretty": 33143,
+        "yaml": 21131,
+        "haal": 10572
+      },
+      "o200k_base": {
+        "json": {
+          "tokens": 6522,
+          "vs_json_pct": 0.0
+        },
+        "json_pretty": {
+          "tokens": 10726,
+          "vs_json_pct": -64.5
+        },
+        "yaml": {
+          "tokens": 8083,
+          "vs_json_pct": -23.9
+        },
+        "haal": {
+          "tokens": 4081,
+          "vs_json_pct": 37.4
+        }
+      },
+      "cl100k_base": {
+        "json": {
+          "tokens": 6518,
+          "vs_json_pct": 0.0
+        },
+        "json_pretty": {
+          "tokens": 10723,
+          "vs_json_pct": -64.5
+        },
+        "yaml": {
+          "tokens": 8089,
+          "vs_json_pct": -24.1
+        },
+        "haal": {
+          "tokens": 4024,
+          "vs_json_pct": 38.3
+        }
+      }
+    },
+    "timeseries_48h": {
+      "bytes": {
+        "json": 1299,
+        "json_pretty": 3071,
+        "yaml": 2247,
+        "haal": 1298
+      },
+      "o200k_base": {
+        "json": {
+          "tokens": 858,
+          "vs_json_pct": 0.0
+        },
+        "json_pretty": {
+          "tokens": 1385,
+          "vs_json_pct": -61.4
+        },
+        "yaml": {
+          "tokens": 1587,
+          "vs_json_pct": -85.0
+        },
+        "haal": {
+          "tokens": 873,
+          "vs_json_pct": -1.7
+        }
+      },
+      "cl100k_base": {
+        "json": {
+          "tokens": 858,
+          "vs_json_pct": 0.0
+        },
+        "json_pretty": {
+          "tokens": 1385,
+          "vs_json_pct": -61.4
+        },
+        "yaml": {
+          "tokens": 1587,
+          "vs_json_pct": -85.0
+        },
+        "haal": {
+          "tokens": 873,
+          "vs_json_pct": -1.7
+        }
+      }
+    },
+    "config": {
+      "bytes": {
+        "json": 779,
+        "json_pretty": 1158,
+        "yaml": 819,
+        "haal": 752
+      },
+      "o200k_base": {
+        "json": {
+          "tokens": 228,
+          "vs_json_pct": 0.0
+        },
+        "json_pretty": {
+          "tokens": 382,
+          "vs_json_pct": -67.5
+        },
+        "yaml": {
+          "tokens": 274,
+          "vs_json_pct": -20.2
+        },
+        "haal": {
+          "tokens": 259,
+          "vs_json_pct": -13.6
+        }
+      },
+      "cl100k_base": {
+        "json": {
+          "tokens": 228,
+          "vs_json_pct": 0.0
+        },
+        "json_pretty": {
+          "tokens": 383,
+          "vs_json_pct": -68.0
+        },
+        "yaml": {
+          "tokens": 273,
+          "vs_json_pct": -19.7
+        },
+        "haal": {
+          "tokens": 258,
+          "vs_json_pct": -13.2
+        }
+      }
+    },
+    "rag_chunks_30": {
+      "bytes": {
+        "json": 11758,
+        "json_pretty": 13026,
+        "yaml": 11634,
+        "haal": 10585
+      },
+      "o200k_base": {
+        "json": {
+          "tokens": 2371,
+          "vs_json_pct": 0.0
+        },
+        "json_pretty": {
+          "tokens": 2851,
+          "vs_json_pct": -20.2
+        },
+        "yaml": {
+          "tokens": 2497,
+          "vs_json_pct": -5.3
+        },
+        "haal": {
+          "tokens": 2105,
+          "vs_json_pct": 11.2
+        }
+      },
+      "cl100k_base": {
+        "json": {
+          "tokens": 2330,
+          "vs_json_pct": 0.0
+        },
+        "json_pretty": {
+          "tokens": 2811,
+          "vs_json_pct": -20.6
+        },
+        "yaml": {
+          "tokens": 2457,
+          "vs_json_pct": -5.5
+        },
+        "haal": {
+          "tokens": 2065,
+          "vs_json_pct": 11.4
+        }
+      }
+    }
+  },
+  "ablations": {
+    "delimiter_o200k_total_tokens": {
+      "comma": 14860,
+      "tab": 14537,
+      "pipe": 15272,
+      "semicolon": 15209
+    },
+    "indent_o200k_total_tokens": {
+      "indent_1": 14860,
+      "indent_2": 15261,
+      "indent_4": 15261
+    }
+  }
+}
