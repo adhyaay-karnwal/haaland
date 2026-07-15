@@ -2,9 +2,10 @@
 
 > HAAL is a token-efficient plain-text serialization of the JSON data model for LLM
 > context windows. Lossless round-trip (loads(dumps(x)) == x, key order included).
-> Measured on tiktoken o200k_base across six datasets: -22.9% tokens vs compact
-> JSON, -51.3% vs 2-space JSON, -37.3% vs YAML; best case -37.4% on uniform record
-> arrays; worst case +13.6% on small deeply-nested config (documented loss).
+> Measured on tiktoken o200k_base across six datasets: standard profile -22.9%
+> tokens vs compact JSON; dense profile (space delimiter, unpadded separators)
+> -28.0% vs compact JSON, -54.6% vs 2-space JSON, -41.4% vs YAML; best case -46.5%
+> on uniform record arrays; worst case +0.9% (documented).
 > Python: `import haaland; haaland.dumps(obj); haaland.loads(text)`. CLI: `haal
 > encode|decode|check|stats`.
 

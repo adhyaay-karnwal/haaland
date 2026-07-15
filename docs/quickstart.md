@@ -42,6 +42,7 @@ tokenizer: o200k_base
   json              4,732 tokens
   json (2-space)    7,436 tokens  (-57.1% vs JSON)
   haal              3,107 tokens  (+34.3% vs JSON)
+  haal (dense)      2,863 tokens  (+39.5% vs JSON)
 ```
 
 (Output above is the real result for `benchmarks/` dataset `employees_100`.)

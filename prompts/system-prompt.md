@@ -1,7 +1,7 @@
 # HAAL system-prompt block
 
 Paste the block below into your system prompt when you pass HAAL-formatted data to a
-model, or when you want the model to emit HAAL. It is deliberately short — 344 tokens as
+model, or when you want the model to emit HAAL. It is deliberately short — 382 tokens as
 committed, measured under `o200k_base` — and for most payloads the one-time cost is
 repaid many times over by the per-request savings on the data itself.
 
@@ -11,10 +11,13 @@ repaid many times over by the per-request savings on the data itself.
 Data in this conversation may use HAAL, a compact serialization of the JSON data
 model. Rules:
 
-- `key: value` is an object entry. A `key:` line with an indented block under it is
-  a nested object. `key: {}` is an empty object. Indentation is spaces.
-- `key[N]: a,b,c` is an array of N scalars.
-- `key[N]{f1,f2}:` followed by N indented comma-separated rows is an array of N
+- `key: value` (or `key:value`) is an object entry. A `key:` line with an indented
+  block under it is a nested object. `key: {}` is an empty object. Indentation is
+  spaces.
+- `key[N]: a,b,c` is an array of N scalars. The cell delimiter is consistent per
+  document: a comma or a single space (space-delimited cells containing spaces are
+  double-quoted).
+- `key[N]{f1,f2}:` followed by N indented delimiter-separated rows is an array of N
   objects; each row's cells map to the fields f1,f2 in order.
 - `key[N]:` followed by N `- item` lines is a mixed array. `-` alone introduces an
   object element (indented block); `- [N]: ...` a nested array; `- {}` an empty object.
@@ -44,5 +47,5 @@ means: {"users":[{"id":1,"name":"Ada Lovelace","active":true},
   always validate with `haaland.loads()`, and feed decode errors back on retry —
   see [../docs/llm-integration.md](../docs/llm-integration.md).
 - Measure the block's token cost yourself: `haal stats` or your provider's token
-  counter. The 344-token figure is measured with tiktoken `o200k_base` on the block between
+  counter. The 382-token figure is measured with tiktoken `o200k_base` on the block between
   the fences above; re-measure if you edit it.

@@ -88,10 +88,11 @@ def tool_result_to_context(result) -> str:
     return str(result)
 ```
 
-Measured on our `events_200` dataset this is a 37% reduction per tool result; over a
+Measured on our `events_200` dataset this is a 46.5% reduction per tool result
+(dense profile); over a
 long agent loop where the transcript is re-sent every turn, savings compound with
-turn count (an N-turn loop re-reads earlier results ~N times, so a 37% saving on a
-result is saved roughly N times — subject to your provider's prompt caching).
+turn count (an N-turn loop re-reads earlier results ~N times, so the saving on a
+result compounds roughly N times — subject to your provider's prompt caching).
 
 ## Evaluating comprehension
 

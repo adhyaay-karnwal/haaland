@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "haaland"
-version = "0.1.0"
+version = "0.2.0"
 description = "HAAL: a token-efficient serialization language for LLM context windows. Lossless JSON round-trip at a fraction of the tokens."
 readme = "README.md"
 requires-python = ">=3.10"

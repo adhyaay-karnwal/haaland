@@ -30,8 +30,10 @@ def _read(path: str | None) -> str:
         return f.read()
 
 
-def _delimiter(name: str) -> str:
-    named = {"comma": ",", "tab": "\t", "pipe": "|", "semicolon": ";"}
+def _delimiter(name: str | None) -> str | None:
+    if name is None:
+        return None
+    named = {"comma": ",", "tab": "\t", "pipe": "|", "semicolon": ";", "space": " "}
     if name in named:
         return named[name]
     return name
@@ -39,19 +41,26 @@ def _delimiter(name: str) -> str:
 
 def _cmd_encode(args: argparse.Namespace) -> int:
     data = json.loads(_read(args.file))
-    print(dumps(data, indent=args.indent, delimiter=_delimiter(args.delimiter)))
+    print(
+        dumps(
+            data,
+            indent=args.indent,
+            delimiter=_delimiter(args.delimiter),
+            profile=args.profile,
+        )
+    )
     return 0
 
 
 def _cmd_decode(args: argparse.Namespace) -> int:
-    value = loads(_read(args.file), delimiter=_delimiter(args.delimiter))
+    value = loads(_read(args.file), delimiter=_delimiter(args.delimiter), profile=args.profile)
     print(json.dumps(value, ensure_ascii=False, indent=args.indent or None))
     return 0
 
 
 def _cmd_check(args: argparse.Namespace) -> int:
     try:
-        loads(_read(args.file), delimiter=_delimiter(args.delimiter))
+        loads(_read(args.file), delimiter=_delimiter(args.delimiter), profile=args.profile)
     except HaalError as exc:
         print(f"invalid: {exc}", file=sys.stderr)
         return 1
@@ -67,6 +76,7 @@ def _cmd_stats(args: argparse.Namespace) -> int:
         "json": json.dumps(data, ensure_ascii=False, separators=(",", ":")),
         "json (2-space)": json.dumps(data, ensure_ascii=False, indent=2),
         "haal": dumps(data, delimiter=_delimiter(args.delimiter)),
+        "haal (dense)": dumps(data, profile="dense"),
     }
     encodings = KNOWN_ENCODINGS if args.encoding == "all" else (args.encoding,)
     for encoding in encodings:
@@ -92,8 +102,15 @@ def main(argv: list[str] | None = None) -> int:
         p.add_argument("file", nargs="?", default=None, help="input file (default: stdin)")
         p.add_argument(
             "--delimiter",
-            default="comma",
-            help="cell delimiter: comma, tab, pipe, or semicolon (default: comma)",
+            default=None,
+            help="cell delimiter: comma, tab, pipe, semicolon, or space "
+            "(default: comma; space when --profile dense)",
+        )
+        p.add_argument(
+            "--profile",
+            default="standard",
+            choices=("standard", "dense"),
+            help="encoding profile; dense is the measured maximum-efficiency form",
         )
 
     p = sub.add_parser("encode", help="convert JSON to HAAL")
