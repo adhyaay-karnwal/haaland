@@ -1,0 +1,25 @@
+name: Bug report
+description: Codec bug, round-trip failure, or decoder error issue
+labels: [bug]
+body:
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal reproduction
+      description: Smallest input (Python value or HAAL document) that shows the problem.
+      render: python
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected vs actual behavior
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: haaland version and Python version
+      placeholder: haaland 0.1.0, Python 3.12
+    validations:
+      required: true

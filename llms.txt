@@ -1,0 +1,34 @@
+# Haaland (HAAL)
+
+> HAAL is a token-efficient plain-text serialization of the JSON data model for LLM
+> context windows. Lossless round-trip (loads(dumps(x)) == x, key order included).
+> Measured on tiktoken o200k_base across six datasets: -22.9% tokens vs compact
+> JSON, -51.3% vs 2-space JSON, -37.3% vs YAML; best case -37.4% on uniform record
+> arrays; worst case +13.6% on small deeply-nested config (documented loss).
+> Python: `import haaland; haaland.dumps(obj); haaland.loads(text)`. CLI: `haal
+> encode|decode|check|stats`.
+
+Syntax essentials: `key: value` object entries; indentation nests (spaces only);
+`key[N]: a,b,c` scalar array; `key[N]{f1,f2}:` + N indented rows = array of uniform
+objects (keys written once); `key[N]:` + `- item` lines = mixed array; bare scalars
+unless quoting is required (number-like strings, delimiter inside a cell, empty
+string, leading/trailing space); `"..."` uses JSON string escapes; `[N]` lengths and
+row widths are validated strictly at parse time with line-numbered errors.
+
+## Docs
+
+- [Spec](docs/spec.md): formal format specification v0.1
+- [Format by example](docs/format-by-example.md): every construct vs JSON
+- [Quickstart](docs/quickstart.md): install to first prompt
+- [LLM integration](docs/llm-integration.md): prompt patterns, validation loops
+- [System-prompt primer](prompts/system-prompt.md): paste-in block teaching models HAAL
+- [Agent setup prompt](prompts/agent-setup.md): prompt for coding agents to integrate HAAL
+- [Benchmarks](benchmarks/RESULTS.md): measured results and methodology
+- [Design notes](docs/design-notes.md): ablations and rejected alternatives
+- [Enterprise guide](docs/enterprise.md): cost model, rollout, risk
+- [FAQ](docs/faq.md): limitations, TOON comparison, tokenizer scope
+
+## Source
+
+- [Encoder](src/haaland/_encoder.py) and [decoder](src/haaland/_decoder.py): 560 lines total, zero dependencies
+- [Conformance tests](tests/): golden + hypothesis property tests define behavior where the spec is ambiguous
