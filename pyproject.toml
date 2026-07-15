@@ -1,0 +1,72 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "haaland"
+version = "0.1.0"
+description = "HAAL: a token-efficient serialization language for LLM context windows. Lossless JSON round-trip at a fraction of the tokens."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "Haaland contributors" }]
+keywords = [
+  "llm",
+  "tokens",
+  "serialization",
+  "prompt-engineering",
+  "json",
+  "token-efficiency",
+  "context-window",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Text Processing :: Markup",
+]
+
+[project.optional-dependencies]
+tokens = ["tiktoken>=0.5"]
+dev = [
+  "pytest>=8.0",
+  "pytest-cov>=5.0",
+  "hypothesis>=6.100",
+  "ruff>=0.6",
+  "tiktoken>=0.5",
+  "pyyaml>=6.0",
+]
+
+[project.scripts]
+haal = "haaland.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/adhyaay-karnwal/haaland"
+Repository = "https://github.com/adhyaay-karnwal/haaland"
+Issues = "https://github.com/adhyaay-karnwal/haaland/issues"
+Documentation = "https://github.com/adhyaay-karnwal/haaland/tree/main/docs"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/haaland"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4", "SIM", "RET"]
+ignore = ["SIM108"]
+
+[tool.coverage.run]
+source = ["haaland"]
