@@ -68,23 +68,46 @@ Reproduce with `python benchmarks/run.py`. Full tables: [benchmarks/RESULTS.md](
 | JSON (2-space, what most people paste) | 30,549 | +58.5% |
 | YAML | 23,686 | +22.9% |
 | JSON (compact) | 19,272 | baseline |
-| **HAAL** | **14,860** | **−22.9%** |
+| HAAL (standard) | 14,860 | −22.9% |
+| **HAAL (dense)** | **13,871** | **−28.0%** |
 
 Per-dataset, against the *strongest* baseline (compact JSON):
 
-| Dataset (shape) | JSON | HAAL | Savings |
-|---|---:|---:|---:|
-| `events_200` — API/event log records | 6,522 | 4,081 | **−37.4%** |
-| `employees_100` — uniform database rows | 4,732 | 3,107 | **−34.3%** |
-| `rag_chunks_30` — retrieval chunks + metadata | 2,371 | 2,105 | −11.2% |
-| `orders_50` — nested orders with line items | 4,561 | 4,435 | −2.8% |
-| `timeseries_48h` — numeric metric arrays | 858 | 873 | +1.7% |
-| `config` — small deeply-nested object | 228 | 259 | +13.6% |
+| Dataset (shape) | JSON | HAAL std | HAAL dense | Best savings |
+|---|---:|---:|---:|---:|
+| `events_200` — API/event log records | 6,522 | 4,081 | 3,492 | **−46.5%** |
+| `employees_100` — uniform database rows | 4,732 | 3,107 | 2,863 | **−39.5%** |
+| `rag_chunks_30` — retrieval chunks + metadata | 2,371 | 2,105 | 2,063 | −13.0% |
+| `orders_50` — nested orders with line items | 4,561 | 4,435 | 4,358 | −4.5% |
+| `timeseries_48h` — numeric metric arrays | 858 | 873 | 865 | +0.8% |
+| `config` — small deeply-nested object | 228 | 259 | 230 | +0.9% |
 
-We publish the losses too: on small, deeply-nested payloads with no repeated
-structure, compact JSON wins. HAAL targets the payloads that dominate real token
-bills — **arrays of records**. Against pretty-printed JSON (the de-facto default in
-prompts), HAAL measures **−51.3%** overall.
+We publish the losses too: on small deep payloads with no repeated structure,
+compact JSON still edges ahead — though the dense profile shrinks those losses to
+under 1%. HAAL targets the payloads that dominate real token bills — **arrays of
+records**. Against pretty-printed JSON (the de-facto default in prompts), dense
+HAAL measures **−54.6%** overall.
+
+### The dense profile — speak the tokenizer's language
+
+`haaland.dumps(data, profile="dense")` / `haal encode --profile dense`:
+
+```
+users[3]{id name role active}:
+ 1 "Ada Lovelace" admin true
+ 2 "Grace Hopper" editor true
+ 3 "Alan Turing" viewer false
+```
+
+The v0.2 research pass tested the "doesn't have to be English" hypothesis — exotic
+Unicode delimiters, single-character keywords, symbol-indexed value dictionaries —
+and the measurements said the opposite ([full data](docs/design-notes.md#v02-research-pass-it-doesnt-have-to-be-english)):
+BPE vocabularies are built from natural text, so ` engineering` is one token while
+`,engineering` is two and `␟engineering` is five. The most token-efficient encoding
+is the one that looks most like plain English. Dense HAAL therefore uses the
+**space** as its delimiter and drops separator padding — nothing more — for −28.0%
+vs compact JSON overall and −46.5% on event logs. Decoders read both profiles
+transparently.
 
 > **Tokenizer scope.** `o200k_base`/`cl100k_base` (OpenAI) are the only production
 > BPE vocabularies that are public and runnable offline, so those are what we measure.
@@ -100,7 +123,7 @@ prompts), HAAL measures **−51.3%** overall.
 flowchart LR
     A["JSON<br/>repeats every key,<br/>quotes every string,<br/>braces every object"] -->|"strip repeated keys<br/>(tabular header)"| B
     B["header once<br/>+ rows"] -->|"drop quotes & braces<br/>where unambiguous"| C
-    C["bare scalars"] -->|"newline + 1-space indent<br/>instead of punctuation"| D["HAAL<br/>−22.9% vs compact JSON<br/>−51.3% vs pretty JSON"]
+    C["bare scalars"] -->|"space delimiter + unpadded separators<br/>(dense profile)"| D["HAAL dense<br/>−28.0% vs compact JSON<br/>−54.6% vs pretty JSON"]
 ```
 
 1. **Tabular arrays.** A uniform array of objects declares its fields once
@@ -109,9 +132,10 @@ flowchart LR
 2. **Quoting only when required.** Strings are written bare unless that would change
    the parse; the spec defines exact per-context rules, so it stays lossless.
 3. **Cheap structure.** Newline + 1-space indentation merges into few BPE tokens;
-   `{`, `}`, `",`, `":` typically don't. Both the 1-space indent and the comma
-   delimiter are the **measured optima** from committed ablation runs
-   ([design notes](docs/design-notes.md)).
+   `{`, `}`, `",`, `":` typically don't. Indent width, delimiter, and separator
+   padding are all **measured optima** from committed ablation runs
+   ([design notes](docs/design-notes.md)) — including the space delimiter, which
+   turns rows into the space-separated word sequences BPE merges best.
 4. **Verifiable by design.** `[N]` length markers and field headers make truncated or
    hallucinated structure detectable at parse time — which matters when the *producer*
    of the document is an LLM. The decoder validates all of it strictly.
@@ -159,10 +183,10 @@ Ready-made, tested prompt blocks live in [`prompts/`](prompts/):
 
 | Payload | Recommendation |
 |---|---|
-| Arrays of records: DB rows, API results, logs, CSV-ish data | **Use HAAL** — 30–40% measured savings |
-| RAG chunks with metadata | Use HAAL — ~11% measured savings |
+| Arrays of records: DB rows, API results, logs, CSV-ish data | **Use HAAL** — 34–47% measured savings (dense profile) |
+| RAG chunks with metadata | Use HAAL — ~13% measured savings (dense) |
 | Mixed nested documents | Use HAAL — small wins; flatten where possible |
-| Small deep config objects, pure numeric arrays | Compact JSON is equal or better — HAAL's `[N]` validation costs a few tokens |
+| Small deep config objects, pure numeric arrays | Roughly a wash (dense within 1% of compact JSON); HAAL adds `[N]` validation |
 | Function-calling / structured *output* where the API enforces JSON schema | Keep JSON — the platform requires it |
 
 ## Documentation

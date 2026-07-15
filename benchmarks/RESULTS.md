@@ -15,7 +15,8 @@ the source data before being counted. Baseline for savings: **compact JSON**
 | JSON (compact) | 19,272 | baseline | +0.0% … +0.0% |
 | JSON (2-space) | 30,549 | -58.5% | -70.3% … -20.2% |
 | YAML | 23,686 | -22.9% | -85.0% … -5.3% |
-| HAAL | 14,860 | +22.9% | -13.6% … +37.4% |
+| HAAL (standard) | 14,860 | +22.9% | -13.6% … +37.4% |
+| HAAL (dense) | 13,871 | +28.0% | -0.9% … +46.5% |
 
 ### Tokenizer: `cl100k_base`
 
@@ -24,7 +25,8 @@ the source data before being counted. Baseline for savings: **compact JSON**
 | JSON (compact) | 19,138 | baseline | +0.0% … +0.0% |
 | JSON (2-space) | 30,520 | -59.5% | -74.0% … -20.6% |
 | YAML | 23,641 | -23.5% | -85.0% … -5.5% |
-| HAAL | 14,725 | +23.1% | -13.2% … +38.3% |
+| HAAL (standard) | 14,725 | +23.1% | -13.2% … +38.3% |
+| HAAL (dense) | 13,848 | +27.6% | -0.8% … +46.3% |
 
 ## Per-dataset results
 
@@ -35,7 +37,8 @@ the source data before being counted. Baseline for savings: **compact JSON**
 | JSON (compact) | 16,093 | 4,732 | baseline | 4,731 | baseline |
 | JSON (2-space) | 23,501 | 7,436 | -57.1% | 7,436 | -57.2% |
 | YAML | 15,889 | 5,717 | -20.8% | 5,715 | -20.8% |
-| HAAL | 8,345 | 3,107 | +34.3% | 3,068 | +35.2% |
+| HAAL (standard) | 8,345 | 3,107 | +34.3% | 3,068 | +35.2% |
+| HAAL (dense) | 8,545 | 2,863 | +39.5% | 2,864 | +39.5% |
 
 ### `orders_50`
 
@@ -44,7 +47,8 @@ the source data before being counted. Baseline for savings: **compact JSON**
 | JSON (compact) | 14,337 | 4,561 | baseline | 4,473 | baseline |
 | JSON (2-space) | 26,399 | 7,769 | -70.3% | 7,782 | -74.0% |
 | YAML | 14,897 | 5,528 | -21.2% | 5,520 | -23.4% |
-| HAAL | 11,264 | 4,435 | +2.8% | 4,437 | +0.8% |
+| HAAL (standard) | 11,264 | 4,435 | +2.8% | 4,437 | +0.8% |
+| HAAL (dense) | 11,210 | 4,358 | +4.5% | 4,369 | +2.3% |
 
 ### `events_200`
 
@@ -53,7 +57,8 @@ the source data before being counted. Baseline for savings: **compact JSON**
 | JSON (compact) | 21,535 | 6,522 | baseline | 6,518 | baseline |
 | JSON (2-space) | 33,143 | 10,726 | -64.5% | 10,723 | -64.5% |
 | YAML | 21,131 | 8,083 | -23.9% | 8,089 | -24.1% |
-| HAAL | 10,572 | 4,081 | +37.4% | 4,024 | +38.3% |
+| HAAL (standard) | 10,572 | 4,081 | +37.4% | 4,024 | +38.3% |
+| HAAL (dense) | 10,572 | 3,492 | +46.5% | 3,498 | +46.3% |
 
 ### `timeseries_48h`
 
@@ -62,7 +67,8 @@ the source data before being counted. Baseline for savings: **compact JSON**
 | JSON (compact) | 1,299 | 858 | baseline | 858 | baseline |
 | JSON (2-space) | 3,071 | 1,385 | -61.4% | 1,385 | -61.4% |
 | YAML | 2,247 | 1,587 | -85.0% | 1,587 | -85.0% |
-| HAAL | 1,298 | 873 | -1.7% | 873 | -1.7% |
+| HAAL (standard) | 1,298 | 873 | -1.7% | 873 | -1.7% |
+| HAAL (dense) | 1,289 | 865 | -0.8% | 865 | -0.8% |
 
 ### `config`
 
@@ -71,7 +77,8 @@ the source data before being counted. Baseline for savings: **compact JSON**
 | JSON (compact) | 779 | 228 | baseline | 228 | baseline |
 | JSON (2-space) | 1,158 | 382 | -67.5% | 383 | -68.0% |
 | YAML | 819 | 274 | -20.2% | 273 | -19.7% |
-| HAAL | 752 | 259 | -13.6% | 258 | -13.2% |
+| HAAL (standard) | 752 | 259 | -13.6% | 258 | -13.2% |
+| HAAL (dense) | 723 | 230 | -0.9% | 229 | -0.4% |
 
 ### `rag_chunks_30`
 
@@ -80,7 +87,8 @@ the source data before being counted. Baseline for savings: **compact JSON**
 | JSON (compact) | 11,758 | 2,371 | baseline | 2,330 | baseline |
 | JSON (2-space) | 13,026 | 2,851 | -20.2% | 2,811 | -20.6% |
 | YAML | 11,634 | 2,497 | -5.3% | 2,457 | -5.5% |
-| HAAL | 10,585 | 2,105 | +11.2% | 2,065 | +11.4% |
+| HAAL (standard) | 10,585 | 2,105 | +11.2% | 2,065 | +11.4% |
+| HAAL (dense) | 10,585 | 2,063 | +13.0% | 2,023 | +13.2% |
 
 ## Ablations (why HAAL's defaults are what they are)
 
@@ -92,6 +100,7 @@ Total `o200k_base` tokens across all six datasets:
 | `tab` | 14,537 |
 | `pipe` | 15,272 |
 | `semicolon` | 15,209 |
+| `space` | 13,909 |
 
 | Indent width | Total tokens |
 |---|---:|

@@ -6,6 +6,31 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-07-14
+
+### Added
+
+- **Dense profile** (`profile="dense"` / `haal --profile dense`): space delimiter
+  plus unpadded `:`/`-` separators. Measured (o200k_base, six-dataset suite):
+  **−28.0% tokens vs compact JSON** overall (−22.9% for standard), −54.6% vs
+  2-space JSON, −41.4% vs YAML, −6.7% vs standard HAAL; event logs −46.5%.
+  The former worst-case shapes are nearly neutralized (deep config +0.9% and
+  numeric timeseries +0.8% vs compact JSON, from +13.6%/+1.7%).
+- Space added to supported delimiters (the measured cheapest: BPE vocabularies
+  merge space-prefixed words into single tokens).
+- Decoder now accepts both profiles' separator forms transparently; only the
+  delimiter remains a codec parameter.
+- `haal stats` reports a `haal (dense)` row.
+- Negative results recorded in docs/design-notes.md: single-character
+  booleans/null (`T`/`F`/`~`), exotic Unicode delimiters, and symbol-indexed
+  value dictionaries all measured at zero or negative gain — under a BPE
+  tokenizer, plain space-separated English is the efficient encoding.
+
+### Changed
+
+- Spec bumped to v0.2 (§3.1 Profiles). Standard-profile output is byte-identical
+  to v0.1.0; existing documents parse unchanged.
+
 ## [0.1.0] - 2026-07-14
 
 ### Added

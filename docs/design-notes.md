@@ -19,27 +19,69 @@ of spaces into single tokens at these depths; 1 space wins by keeping short
 indent+content merges.) The decoder accepts any consistent width, so hand-written
 documents can use whatever is readable.
 
-## Chosen: comma delimiter by default, tab as the max-efficiency profile
+## Chosen: comma delimiter for standard, space for dense
 
 | Delimiter | Total tokens | vs. comma |
 |---|---:|---:|
+| **space (dense default)** | **13,909** | −6.4% |
 | tab | 14,537 | −2.2% |
-| **comma (default)** | **14,860** | — |
+| **comma (standard default)** | **14,860** | — |
 | semicolon | 15,209 | +2.3% |
 | pipe | 15,272 | +2.8% |
 
-Tab measurably wins — partly because tab characters merge well under BPE, partly
-because real-world prose contains commas (our RAG dataset includes them
-deliberately), which forces quoting under the comma delimiter but not under tab.
+**Space is the cheapest delimiter by a wide margin** — the central finding of the
+v0.2 research pass. BPE vocabularies are built from natural text, so their most
+common merges are space-prefixed words: ` engineering` is one token where
+`,engineering` is two. A space-delimited row is, to the tokenizer, an English-like
+sentence. On the event-log dataset the space delimiter alone is −14.4% vs the comma
+form. Cells that contain spaces get quoted (the standard collision rule), which is
+why prose-heavy columns temper the win rather than break correctness.
 
-We still default to comma, and this is a robustness call, not an efficiency call:
+The standard profile keeps comma for robustness and CSV familiarity; the dense
+profile defaults to space. Tab remains supported but is now dominated: space is both
+cheaper and immune to tab-normalizing editors.
 
-- Editors, chat UIs, terminals, and models themselves silently normalize tabs to
-  spaces. A normalized tab corrupts data invisibly; a normalized comma cannot happen.
-- Comma-separated rows are the single most training-represented tabular syntax (CSV).
+## v0.2 research pass: "it doesn't have to be English"
 
-`--delimiter tab` / `dumps(data, delimiter="\t")` is fully supported for closed
-pipelines where you control both ends and want the extra 2.2%.
+We tested the hypothesis that a *less* human-readable surface — exotic characters,
+symbol codes, compressed keywords — would be more token-efficient. Measured verdict:
+**the opposite.** BPE vocabularies are English-optimized, so the efficient encoding
+is the one that looks most like plain English text. The winners (space delimiter,
+unpadded separators) make HAAL read *more* like natural language, not less.
+
+### Adopted: unpadded separators (dense profile)
+
+`key:value` instead of `key: value`, `-item` instead of `- item`. Suite total:
+14,860 → 14,822 (comma) / 13,909 → 13,871 (space). The overall gain is +0.27%, but
+it concentrates exactly where HAAL was weakest: `config` improves 259 → 232 (−10.4%)
+because `:8443` is one token cheaper than `: 8443` on numeric and keyword values.
+With both dense changes, the former worst cases nearly vanish: config is +0.9% vs
+compact JSON (was +13.6%) and timeseries +0.8% (was +1.7%).
+
+### Rejected: single-character keywords (`T`/`F` for booleans, `~`/`∅` for null)
+
+Measured: `,true` and `,false` are **already single tokens** under `o200k_base`
+(`true`/`false`/`null` are common enough to have dedicated merges). `,T` is also one
+token — zero gain — while `,~` is two and `,∅` is three (worse). Single-character
+keywords would also force quoting of legitimate `"T"`/`"F"` string data. Rejected
+with prejudice.
+
+### Rejected: exotic Unicode delimiters (`·`, `、`, `¦`, `‖`, `␟`, U+001F)
+
+Measured on a realistic row: `·`, `、`, `¦`, and U+001F all tie comma at 29 tokens;
+`‖` costs 36 and `␟` costs 43. Rare codepoints fragment into multi-byte tokens.
+There is no exotic-character shortcut; the vocabulary rewards ordinary text.
+
+### Rejected: symbol-indexed value dictionaries (enum folding)
+
+The idea: declare repeated categorical values once in the table header and emit
+digit indices in cells (`type=(push|fork|release)` … `,2`). Under the comma
+delimiter this measured ~1 token saved per multi-token value. Under the space
+delimiter it collapses: ` engineering`, ` delivered`, ` returned` are already
+**one token each** — the same cost as an index — and ` pull_request` (2 tokens)
+saves at most 1 minus dictionary overhead. Net gain ≈ 0 at a real complexity and
+model-legibility cost. Rejected. The tokenizer's vocabulary *is* the value
+dictionary; plain words are the compressed form.
 
 ## Rejected: inline first key on list-object items (YAML-style `- key: value`)
 
@@ -67,9 +109,11 @@ parameter; documents stay clean.
 
 ## Known losses (kept honest)
 
-- `config` (small, deep, no arrays): **+13.6% vs compact JSON.** Indentation runs
-  cost more than braces at depth with no key amortization to offset them.
-- `timeseries_48h` (pure numeric arrays): **+1.7%.** `[48]: ` headers vs `[`.
+- `config` (small, deep, no arrays): **+13.6% vs compact JSON** standard,
+  **+0.9% dense.** Indentation runs cost more than braces at depth with no key
+  amortization to offset them; the dense separators close most of the gap.
+- `timeseries_48h` (pure numeric arrays): **+1.7%** standard, **+0.8% dense.**
+  `[48]:` headers vs `[`.
 - `orders_50` (nested, small tables): only **−2.8%** — per-order table headers
   (`items[3]{sku,product,qty,unit_price}:`) are re-paid per order. Flattening
   order-item data into one table (denormalizing `order_id` into rows) measured far

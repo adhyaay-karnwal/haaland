@@ -19,13 +19,20 @@ from .errors import HaalDecodeError
 _ARRAY_HEADER_RE = re.compile(r"^\[(\d+)\]")
 
 
-def decode(text: str, *, delimiter: str = ",") -> Any:
+def decode(text: str, *, delimiter: str | None = None, profile: str = "standard") -> Any:
     """Parse HAAL *text* into Python objects.
 
     Args:
         text: The document. Blank lines and full-line ``#`` comments are ignored.
-        delimiter: Cell separator used when the document was encoded.
+        delimiter: Cell separator used when the document was encoded. Defaults
+            to "," for the standard profile and " " for the dense profile.
+        profile: Convenience switch matching the encoder's *profile*; only the
+            delimiter default depends on it. Separator forms ("key: v" vs
+            "key:v", "- item" vs "-item") are always accepted from either
+            profile.
     """
+    if delimiter is None:
+        delimiter = " " if profile == "dense" else ","
     lines = _scan_lines(text)
     if not lines:
         raise HaalDecodeError("empty document")
@@ -157,11 +164,14 @@ class _Parser:
             if child is None or child.indent <= line.indent:
                 raise self._fail("expected an indented block after ':'", line)
             return self._object(child.indent)
-        if rest == " {}":
-            return {}
+        # Both profiles are accepted: "key: value" (standard) and "key:value"
+        # (dense). Bare scalars never start with a space (such strings are
+        # quoted), so stripping one leading space is unambiguous.
         if rest.startswith(" "):
-            return self._scalar(rest[1:], line)
-        raise self._fail("expected a space after ':'", line)
+            rest = rest[1:]
+        if rest == "{}":
+            return {}
+        return self._scalar(rest, line)
 
     # -- arrays ------------------------------------------------------------
 
@@ -186,9 +196,9 @@ class _Parser:
             if n == 0:
                 return []
             return self._list_items(n, line)
-        if not rest.startswith(" "):
-            raise self._fail("expected a space before inline array values", line)
-        cells = self._split_cells(rest[1:], line)
+        if rest.startswith(" "):  # standard profile pads the inline values
+            rest = rest[1:]
+        cells = self._split_cells(rest, line)
         if len(cells) != n:
             raise self._fail(f"array declared {n} values but has {len(cells)}", line)
         return cells
@@ -272,9 +282,11 @@ class _Parser:
             if child is None or child.indent <= line.indent:
                 raise self._fail("expected an indented object block after '-'", line)
             return self._object(child.indent)
-        if not text.startswith("- "):
+        if not text.startswith("-"):
             raise self._fail("expected list item starting with '-'", line)
-        rest = text[2:]
+        # "- item" (standard) or "-item" (dense); bare scalars never start
+        # with a space, so one optional space after the dash is unambiguous.
+        rest = text[2:] if text.startswith("- ") else text[1:]
         if rest == "{}":
             return {}
         if rest.startswith("["):

@@ -20,8 +20,8 @@ Two of the three factors are **yours to measure** — do not use our averages:
    input tokens; measure, don't assume.
 2. `haal_savings_rate`: run `haal stats` (OpenAI tokenizers) or
    `benchmarks/run_anthropic.py` (Anthropic, needs your API key) on samples of your
-   actual payloads. Our measured range across dataset shapes is **−13.6% (worse) to
-   +37.4% (better)** vs. compact JSON — payload shape dominates.
+   actual payloads. Our measured range across dataset shapes is **+0.9% (worse) to
+   −46.5% (better)** vs. compact JSON with the dense profile — payload shape dominates.
 
 ### Worked illustration
 
@@ -33,13 +33,13 @@ tokenizer is not runnable offline; your Claude percentages will differ — measu
 `benchmarks/run_anthropic.py` before budgeting.
 
 A workload pushing **2 billion input tokens/month** of event-log-shaped data
-(our measured −37.4% shape) through Claude Opus 4.8 at $5.00/MTok:
+(our measured −46.5% shape, dense profile) through Claude Opus 4.8 at $5.00/MTok:
 
 - JSON baseline: 2,000 MTok × $5.00 = $10,000/month
-- HAAL (if the −37.4% rate held on Claude's tokenizer): ≈ $6,260/month
-- Illustrative saving: ≈ $3,740/month, before prompt-caching interactions
+- HAAL dense (if the −46.5% rate held on Claude's tokenizer): ≈ $5,350/month
+- Illustrative saving: ≈ $4,650/month, before prompt-caching interactions
 
-The same math at Haiku 4.5 prices ($1.00/MTok) yields ≈ $748/month — token
+The same math at Haiku 4.5 prices ($1.00/MTok) yields ≈ $930/month — token
 efficiency matters most on premium models and high volumes.
 
 ### Interactions to model
@@ -49,8 +49,8 @@ efficiency matters most on premium models and high volumes.
   cache writes and more usable context — but compute savings on the *uncached* and
   *cache-write* portions, not gross tokens.
 - **Batch APIs** bill at ~50% of standard price; savings halve accordingly.
-- **Context-window headroom** is often worth more than the dollars: −37% on tool
-  results is +59% more records per context at the same budget.
+- **Context-window headroom** is often worth more than the dollars: −46.5% on tool
+  results is +87% more records per context at the same budget.
 - **Latency**: input tokens also cost prefill time. Fewer tokens in ⇒ lower
   time-to-first-token, though the effect varies by provider and load.
 

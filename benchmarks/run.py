@@ -36,9 +36,11 @@ def render_all(data: dict) -> dict[str, str]:
         "json_pretty": json.dumps(data, ensure_ascii=False, indent=2),
         "yaml": yaml.safe_dump(data, sort_keys=False, default_flow_style=False, width=10**9),
         "haal": haaland.dumps(data),
+        "haal_dense": haaland.dumps(data, profile="dense"),
     }
     # Correctness gate: never benchmark a rendering that doesn't round-trip.
     assert haaland.loads(renderings["haal"]) == data
+    assert haaland.loads(renderings["haal_dense"], profile="dense") == data
     assert json.loads(renderings["json"]) == data
     assert yaml.safe_load(renderings["yaml"]) == data
     return renderings
@@ -62,7 +64,13 @@ def measure() -> dict:
 
     # Ablation 1: delimiter choice (measured on the table-heavy datasets).
     delim_totals: dict[str, int] = {}
-    for delim_name, delim in [("comma", ","), ("tab", "\t"), ("pipe", "|"), ("semicolon", ";")]:
+    for delim_name, delim in [
+        ("comma", ","),
+        ("tab", "\t"),
+        ("pipe", "|"),
+        ("semicolon", ";"),
+        ("space", " "),
+    ]:
         total = 0
         for factory in DATASETS.values():
             data = factory()
@@ -115,7 +123,8 @@ FMT_LABELS = {
     "json": "JSON (compact)",
     "json_pretty": "JSON (2-space)",
     "yaml": "YAML",
-    "haal": "HAAL",
+    "haal": "HAAL (standard)",
+    "haal_dense": "HAAL (dense)",
 }
 
 
@@ -138,7 +147,7 @@ def write_markdown(results: dict, summary: dict) -> str:
         w("")
         w("| Format | Total tokens | vs. compact JSON | Range across datasets |")
         w("|---|---:|---:|---:|")
-        for fmt in ("json", "json_pretty", "yaml", "haal"):
+        for fmt in ("json", "json_pretty", "yaml", "haal", "haal_dense"):
             s = summary[encoding][fmt]
             rng = f"{s['min_vs_json_pct']:+.1f}% … {s['max_vs_json_pct']:+.1f}%"
             vs = "baseline" if fmt == "json" else f"{s['overall_vs_json_pct']:+.1f}%"
@@ -152,7 +161,7 @@ def write_markdown(results: dict, summary: dict) -> str:
         w("")
         w("| Format | Bytes | o200k_base tokens | vs. JSON | cl100k_base tokens | vs. JSON |")
         w("|---|---:|---:|---:|---:|---:|")
-        for fmt in ("json", "json_pretty", "yaml", "haal"):
+        for fmt in ("json", "json_pretty", "yaml", "haal", "haal_dense"):
             o = entry["o200k_base"][fmt]
             c = entry["cl100k_base"][fmt]
             vs_o = "baseline" if fmt == "json" else f"{o['vs_json_pct']:+.1f}%"

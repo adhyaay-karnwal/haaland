@@ -28,6 +28,13 @@
         "mean_vs_json_pct": 11.7,
         "min_vs_json_pct": -13.6,
         "max_vs_json_pct": 37.4
+      },
+      "haal_dense": {
+        "total_tokens": 13871,
+        "overall_vs_json_pct": 28.0,
+        "mean_vs_json_pct": 17.0,
+        "min_vs_json_pct": -0.9,
+        "max_vs_json_pct": 46.5
       }
     },
     "cl100k_base": {
@@ -58,6 +65,13 @@
         "mean_vs_json_pct": 11.8,
         "min_vs_json_pct": -13.2,
         "max_vs_json_pct": 38.3
+      },
+      "haal_dense": {
+        "total_tokens": 13848,
+        "overall_vs_json_pct": 27.6,
+        "mean_vs_json_pct": 16.7,
+        "min_vs_json_pct": -0.8,
+        "max_vs_json_pct": 46.3
       }
     }
   },
@@ -67,7 +81,8 @@
         "json": 16093,
         "json_pretty": 23501,
         "yaml": 15889,
-        "haal": 8345
+        "haal": 8345,
+        "haal_dense": 8545
       },
       "o200k_base": {
         "json": {
@@ -85,6 +100,10 @@
         "haal": {
           "tokens": 3107,
           "vs_json_pct": 34.3
+        },
+        "haal_dense": {
+          "tokens": 2863,
+          "vs_json_pct": 39.5
         }
       },
       "cl100k_base": {
@@ -103,6 +122,10 @@
         "haal": {
           "tokens": 3068,
           "vs_json_pct": 35.2
+        },
+        "haal_dense": {
+          "tokens": 2864,
+          "vs_json_pct": 39.5
         }
       }
     },
@@ -111,7 +134,8 @@
         "json": 14337,
         "json_pretty": 26399,
         "yaml": 14897,
-        "haal": 11264
+        "haal": 11264,
+        "haal_dense": 11210
       },
       "o200k_base": {
         "json": {
@@ -129,6 +153,10 @@
         "haal": {
           "tokens": 4435,
           "vs_json_pct": 2.8
+        },
+        "haal_dense": {
+          "tokens": 4358,
+          "vs_json_pct": 4.5
         }
       },
       "cl100k_base": {
@@ -147,6 +175,10 @@
         "haal": {
           "tokens": 4437,
           "vs_json_pct": 0.8
+        },
+        "haal_dense": {
+          "tokens": 4369,
+          "vs_json_pct": 2.3
         }
       }
     },
@@ -155,7 +187,8 @@
         "json": 21535,
         "json_pretty": 33143,
         "yaml": 21131,
-        "haal": 10572
+        "haal": 10572,
+        "haal_dense": 10572
       },
       "o200k_base": {
         "json": {
@@ -173,6 +206,10 @@
         "haal": {
           "tokens": 4081,
           "vs_json_pct": 37.4
+        },
+        "haal_dense": {
+          "tokens": 3492,
+          "vs_json_pct": 46.5
         }
       },
       "cl100k_base": {
@@ -191,6 +228,10 @@
         "haal": {
           "tokens": 4024,
           "vs_json_pct": 38.3
+        },
+        "haal_dense": {
+          "tokens": 3498,
+          "vs_json_pct": 46.3
         }
       }
     },
@@ -199,7 +240,8 @@
         "json": 1299,
         "json_pretty": 3071,
         "yaml": 2247,
-        "haal": 1298
+        "haal": 1298,
+        "haal_dense": 1289
       },
       "o200k_base": {
         "json": {
@@ -217,6 +259,10 @@
         "haal": {
           "tokens": 873,
           "vs_json_pct": -1.7
+        },
+        "haal_dense": {
+          "tokens": 865,
+          "vs_json_pct": -0.8
         }
       },
       "cl100k_base": {
@@ -235,6 +281,10 @@
         "haal": {
           "tokens": 873,
           "vs_json_pct": -1.7
+        },
+        "haal_dense": {
+          "tokens": 865,
+          "vs_json_pct": -0.8
         }
       }
     },
@@ -243,7 +293,8 @@
         "json": 779,
         "json_pretty": 1158,
         "yaml": 819,
-        "haal": 752
+        "haal": 752,
+        "haal_dense": 723
       },
       "o200k_base": {
         "json": {
@@ -261,6 +312,10 @@
         "haal": {
           "tokens": 259,
           "vs_json_pct": -13.6
+        },
+        "haal_dense": {
+          "tokens": 230,
+          "vs_json_pct": -0.9
         }
       },
       "cl100k_base": {
@@ -279,6 +334,10 @@
         "haal": {
           "tokens": 258,
           "vs_json_pct": -13.2
+        },
+        "haal_dense": {
+          "tokens": 229,
+          "vs_json_pct": -0.4
         }
       }
     },
@@ -287,7 +346,8 @@
         "json": 11758,
         "json_pretty": 13026,
         "yaml": 11634,
-        "haal": 10585
+        "haal": 10585,
+        "haal_dense": 10585
       },
       "o200k_base": {
         "json": {
@@ -305,6 +365,10 @@
         "haal": {
           "tokens": 2105,
           "vs_json_pct": 11.2
+        },
+        "haal_dense": {
+          "tokens": 2063,
+          "vs_json_pct": 13.0
         }
       },
       "cl100k_base": {
@@ -323,6 +387,10 @@
         "haal": {
           "tokens": 2065,
           "vs_json_pct": 11.4
+        },
+        "haal_dense": {
+          "tokens": 2023,
+          "vs_json_pct": 13.2
         }
       }
     }
@@ -332,7 +400,8 @@
       "comma": 14860,
       "tab": 14537,
       "pipe": 15272,
-      "semicolon": 15209
+      "semicolon": 15209,
+      "space": 13909
     },
     "indent_o200k_total_tokens": {
       "indent_1": 14860,

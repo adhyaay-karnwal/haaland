@@ -1,6 +1,6 @@
 # HAAL Format Specification
 
-**Version:** 0.1 (draft)
+**Version:** 0.2 (draft)
 **Status:** Stable syntax; open to extension before 1.0.
 
 HAAL (the *Haaland* serialization language) is a plain-text encoding of the JSON data
@@ -38,9 +38,33 @@ HAAL represents exactly the JSON data model:
   see `benchmarks/`); decoders accept any consistent per-block width.
 - Blank lines and lines whose first non-space character is `#` (comments) are ignored.
   The encoder never emits either; data that could be mistaken for them is quoted.
-- The **delimiter** separates cells in rows and inline arrays. Canonical: `,`.
-  Supported: `,`, tab, `|`, `;`. Encoder and decoder must agree on the delimiter (it is
-  a codec parameter, not sniffed).
+- The **delimiter** separates cells in rows and inline arrays. Canonical: `,` for the
+  standard profile, space for the dense profile (§3.1). Supported: `,`, tab, `|`, `;`,
+  space. Encoder and decoder must agree on the delimiter (it is a codec parameter, not
+  sniffed).
+
+### 3.1 Profiles
+
+Two encoding profiles share one grammar; they differ only in separator padding and
+default delimiter:
+
+| | standard | dense |
+|---|---|---|
+| Scalar entry | `key: value` | `key:value` |
+| Empty object value | `key: {}` | `key:{}` |
+| Inline array | `key[3]: a,b,c` | `key[3]:a b c` |
+| List scalar item | `- value` | `-value` |
+| Default delimiter | `,` | space |
+
+Decoders MUST accept both forms regardless of profile: after `:` or `-`, at most one
+literal space is consumed before the value. This is unambiguous because bare scalars
+never begin with a space (§4 requires quoting such strings). Only the delimiter is a
+required codec parameter.
+
+The dense profile is the measured maximum-efficiency form (see `benchmarks/` and
+`docs/design-notes.md`): the space delimiter exploits BPE vocabularies' space-prefixed
+word merges, and dropping separator padding saves a token on numeric and keyword
+values.
 
 ## 4. Scalars
 

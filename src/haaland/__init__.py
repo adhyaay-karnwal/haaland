@@ -18,13 +18,14 @@ from __future__ import annotations
 from typing import IO, Any
 
 from ._decoder import decode
-from ._encoder import SUPPORTED_DELIMITERS, encode
+from ._encoder import SUPPORTED_DELIMITERS, SUPPORTED_PROFILES, encode
 from .errors import HaalDecodeError, HaalEncodeError, HaalError
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     "SUPPORTED_DELIMITERS",
+    "SUPPORTED_PROFILES",
     "HaalDecodeError",
     "HaalEncodeError",
     "HaalError",
@@ -36,22 +37,39 @@ __all__ = [
 ]
 
 
-def dumps(obj: Any, *, indent: int = 1, delimiter: str = ",") -> str:
-    """Serialize *obj* to a HAAL string. Mirrors ``json.dumps``."""
-    return encode(obj, indent=indent, delimiter=delimiter)
+def dumps(
+    obj: Any, *, indent: int = 1, delimiter: str | None = None, profile: str = "standard"
+) -> str:
+    """Serialize *obj* to a HAAL string. Mirrors ``json.dumps``.
+
+    ``profile="dense"`` produces the measured maximum-efficiency encoding
+    (space delimiter, no separator padding); see docs/design-notes.md.
+    """
+    return encode(obj, indent=indent, delimiter=delimiter, profile=profile)
 
 
-def loads(text: str, *, delimiter: str = ",") -> Any:
-    """Parse a HAAL string into Python objects. Mirrors ``json.loads``."""
-    return decode(text, delimiter=delimiter)
+def loads(text: str, *, delimiter: str | None = None, profile: str = "standard") -> Any:
+    """Parse a HAAL string into Python objects. Mirrors ``json.loads``.
+
+    Pass ``profile="dense"`` (or the explicit ``delimiter``) used at encode
+    time; separator forms from both profiles are always accepted.
+    """
+    return decode(text, delimiter=delimiter, profile=profile)
 
 
-def dump(obj: Any, fp: IO[str], *, indent: int = 1, delimiter: str = ",") -> None:
+def dump(
+    obj: Any,
+    fp: IO[str],
+    *,
+    indent: int = 1,
+    delimiter: str | None = None,
+    profile: str = "standard",
+) -> None:
     """Serialize *obj* as HAAL to the file-like object *fp*."""
-    fp.write(dumps(obj, indent=indent, delimiter=delimiter))
+    fp.write(dumps(obj, indent=indent, delimiter=delimiter, profile=profile))
     fp.write("\n")
 
 
-def load(fp: IO[str], *, delimiter: str = ",") -> Any:
+def load(fp: IO[str], *, delimiter: str | None = None, profile: str = "standard") -> Any:
     """Parse HAAL from the file-like object *fp*."""
-    return loads(fp.read(), delimiter=delimiter)
+    return loads(fp.read(), delimiter=delimiter, profile=profile)

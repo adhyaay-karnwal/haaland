@@ -10,9 +10,11 @@ strict JSON.
 
 ## What are the real numbers?
 
-Across six benchmark datasets, tokenized with `o200k_base`: **−22.9% vs compact
-JSON, −51.3% vs 2-space JSON, −37.3% vs YAML**. Best shape: uniform event records at
-−37.4%. Worst shape: small deep config at **+13.6% (HAAL loses)**. Full tables and
+Across six benchmark datasets, tokenized with `o200k_base`: standard profile
+**−22.9% vs compact JSON**; dense profile **−28.0% vs compact JSON, −54.6% vs
+2-space JSON, −41.4% vs YAML**. Best shape: uniform event records at −46.5%
+(dense). Worst shape: small deep config at **+0.9% (dense; HAAL still loses,
+barely)**. Full tables and
 methodology: [../benchmarks/RESULTS.md](../benchmarks/RESULTS.md). Reproduce with
 `python benchmarks/run.py`.
 
@@ -52,6 +54,16 @@ If TOON already serves you well, there is no urgent reason to switch; the format
 are conceptually siblings. We benchmark against JSON/YAML rather than TOON because
 apples-to-apples comparison would require pinning their implementation semantics —
 an independent bake-off would be welcome.
+
+## Why not exotic symbols / a non-English micro-syntax?
+
+We measured that hypothesis to death in the v0.2 research pass
+([design-notes.md](design-notes.md#v02-research-pass-it-doesnt-have-to-be-english)):
+single-character keywords save zero tokens (`,true` is already one token), exotic
+Unicode delimiters cost the same or up to +48% more per row, and symbol-indexed
+value dictionaries net ≈0 because common English words are single tokens under BPE.
+The efficient "language" for a BPE tokenizer *is* space-separated plain text —
+which is exactly what the dense profile emits.
 
 ## Why not just gzip the JSON?
 
